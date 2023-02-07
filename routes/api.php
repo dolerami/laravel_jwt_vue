@@ -18,30 +18,33 @@ use App\Http\Controllers\TodoController;
 |
 */
 
-Route::controller(AuthController::class)->group(function () {
-    Route::post('login', 'login');
-    Route::post('register', 'register');
-    Route::post('logout', 'logout');
-    Route::post('refresh', 'refresh');
-
-    Route::group(['namespace' => 'Fruit', 'prefix' => 'fruits'], function() {
-        Route::get('/', [IndexController::class, 'index']);
-    });
-});
-
-Route::controller(TodoController::class)->group(function () {
-    Route::get('todos', 'index');
-    Route::post('todo', 'store');
-    Route::get('todo/{id}', 'show');
-    Route::put('todo/{id}', 'update');
-    Route::delete('todo/{id}', 'destroy');
-
-
-});
-
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::group(['middleware'=>'api', 'prefix'=>'auth'], function () {
+    Route::post('login', [AuthController::class,'login']);
+    Route::post('register', [AuthController::class,'register']);
+    Route::post('logout', [AuthController::class,'logout']);
+    Route::post('refresh', [AuthController::class,'refresh']);
+
+    Route::group(['middleware'=>'auth:api'], function(){
+        Route::group(['namespace' => 'Fruit', 'prefix' => 'fruits'], function() {
+            Route::get('/', [IndexController::class, 'index']);
+        });
+    });
+});
+
+//Route::controller(TodoController::class)->group(function () {
+//    Route::get('todos', 'index');
+//    Route::post('todo', 'store');
+//    Route::get('todo/{id}', 'show');
+//    Route::put('todo/{id}', 'update');
+//    Route::delete('todo/{id}', 'destroy');
+//
+//
+//});
+
 
 Route::group(['namespace' => 'User', 'prefix' => 'users'], function() {
     Route::post('/', [StoreController::class, 'index']);
