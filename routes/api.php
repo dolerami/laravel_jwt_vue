@@ -28,7 +28,7 @@ Route::group(['middleware'=>'api', 'prefix'=>'auth'], function () {
     Route::post('logout', [AuthController::class,'logout']);
     Route::post('refresh', [AuthController::class,'refresh']);
 
-    Route::group(['middleware'=>'auth:api'], function(){
+    Route::group(['middleware'=>'jwt.auth'], function(){
         Route::group(['namespace' => 'Fruit', 'prefix' => 'fruits'], function() {
             Route::get('/', [IndexController::class, 'index']);
         });
@@ -44,7 +44,6 @@ Route::group(['middleware'=>'api', 'prefix'=>'auth'], function () {
 //
 //
 //});
-
 
 Route::group(['namespace' => 'User', 'prefix' => 'users'], function() {
     Route::post('/', [StoreController::class, 'index']);

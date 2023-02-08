@@ -29,6 +29,7 @@ export default {
                 //
                 // console.log(JSON.parse(localStorage.getItem('access_token')))
                 // Good method to safe the token as an object
+                this.$router.push({name: 'user.personal'})
             })
         }
     }
