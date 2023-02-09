@@ -1,6 +1,7 @@
 <template>
     <div class="w-25">
         <input v-model="email" type="email" class="form-control mt-3 mb-3" placeholder="Email">
+        <div v-if="error" class="text-danger">{{this.error}}</div>
         <input v-model="password" type="password" class="form-control mb-3" placeholder="Password">
         <input @click.prevent="login" type="submit" class="btn btn-primary">
     </div>
@@ -12,7 +13,8 @@ export default {
     data(){
         return{
             email: null,
-            password: null
+            password: null,
+            error: null
         }
     },
 
@@ -30,6 +32,9 @@ export default {
                 // console.log(JSON.parse(localStorage.getItem('access_token')))
                 // Good method to safe the token as an object
                 this.$router.push({name: 'user.personal'})
+            })
+            .catch(error => {
+                this.error = error.response.data.message;
             })
         }
     }

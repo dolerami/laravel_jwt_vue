@@ -4,11 +4,14 @@
         <router-link v-if="!token" :to="{name: 'user.login'}" style="margin-left:5px">Login</router-link>
         <router-link v-if="!token" :to="{name: 'user.registration'}" style="margin-left:5px">Registration</router-link>
         <router-link v-if="token" :to="{name: 'user.personal'}" style="margin-left:5px">Personal</router-link>
+        <a href="#" v-if="token" @click.prevent="logout" style="margin-left:5px">Logout</a>
         <router-view></router-view>
     </div>
 </template>
 
 <script>
+import API from "../api";
+
 export default {
     name: "Index",
     data(){
@@ -30,6 +33,13 @@ export default {
     methods:{
         getToken(){
             this.token = localStorage.getItem('token')
+        },
+        logout(){
+            API.post('/api/auth/logout')
+            .then(res =>{
+                localStorage.removeItem('token');
+                this.$router.push({name: 'user.login'})
+            })
         }
     },
     computed:{

@@ -1,6 +1,7 @@
 <template>
     <div class="w-25">
         <input v-model="name" type="text" class="form-control mt-3 mb-3" placeholder="Name">
+        <div class="text-danger" v-if="error">{{error}}</div>
         <input v-model="email" type="email" class="form-control mb-3" placeholder="Email">
         <input v-model="password" type="password" class="form-control mb-3" placeholder="Password">
         <input v-model="password_confirmation" type="password" class="form-control mb-3" placeholder="Confirm Your Password">
@@ -16,7 +17,8 @@ export default {
             name: null,
             email: null,
             password: null,
-            password_confirmation: null
+            password_confirmation: null,
+            error: null
         }
     },
     methods:{
@@ -26,8 +28,13 @@ export default {
                 email: this.email,
                 password: this.password,
                 password_confirmation: this.password_confirmation
-            }).then(res => {
-                console.log(res);
+            })
+            .then(res => {
+                localStorage.setItem('token', res.data.token)
+                this.$router.push({name: 'user.personal'})
+            })
+            .catch(error => {
+                this.error = error.response.data.message;
             })
         }
     }

@@ -22,12 +22,7 @@ api.interceptors.request.use(
 //start response
 
 api.interceptors.response.use(
-    config => {
-        if (localStorage.getItem('token')) {
-            config.headers.authorization = `Bearer ${localStorage.getItem('token')}`
-        }
-        return config
-    },
+    {},
     error => {
         if(error.response.data.message === 'Token has expired'){
             return axios.post('api/auth/refresh', {}, {

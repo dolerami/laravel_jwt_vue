@@ -13,9 +13,12 @@ class StoreController extends Controller
     public function index(Storerequest $request){
         $data=$request->validated();
         $data['password']=Hash::make($data['password']);
-        User::firstOrCreate([
-          'email'=>$data['email']
-        ],$data);
-        return response ([]);
+        $user=User::where('email',$data['email'])->first();
+
+        if ($user) return response (['message' => 'User with this email already exists'], 403);
+
+        $user=User::create($data);
+        $token=auth()->tokenById($user->id);
+        return response (['token'=>$token]);
     }
 }
